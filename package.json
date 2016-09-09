@@ -1,0 +1,24 @@
+{
+  "name": "grunt-grope",
+  "version": "1.0.0",
+  "description": "Grunt grope",
+  "dependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-uglify": "^2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:shangfeiSF/grunt-grope.git"
+  },
+  "keywords": [
+    "Nodejs",
+    "Grunt",
+    "Grunt-contrib-concat",
+    "Grunt-contrib-jshint",
+    "Grunt-contrib-uglify"
+  ],
+  "author": "shangfeiSF",
+  "license": "ISC"
+}
