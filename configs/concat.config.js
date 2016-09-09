@@ -1,7 +1,8 @@
 var grunt = require('grunt')
+
 var pkg = grunt.file.readJSON('package.json')
 
-var config = {
+var _ = {
   /* Declare the source-directories */
   src: {
     first: 'main/src/concat/first',
@@ -15,32 +16,34 @@ var config = {
   filename: 'index.concat'
 }
 
-module.exports = {
+var concatConfig = {
   options: {
     /* The separator used in index.concat.js */
     separator: '\n/* this is separator */\n'
-  },
-
-  tasks: {
-    /* Concat all the .js in first and second */
-    all: {
-      src: [config.src.first + '/*.js', config.src.second + '/*.js'],
-
-      dest: [config.dest, 'all', config.filename + '.js'].join('/')
-    },
-
-    /* Concat all the .js only in first */
-    first: {
-      src: config.src.first + '/*.js',
-
-      dest: [config.dest, 'first', config.filename + '.js'].join('/')
-    },
-
-    /* Concat all the .js only in second */
-    second: {
-      src: config.src.second + '/*.js',
-
-      dest: [config.dest, 'second', config.filename + '.js'].join('/')
-    }
   }
 }
+
+concatConfig.tasks = {
+  /* Concat all the .js in first and second */
+  all: {
+    src: [_.src.first + '/*.js', _.src.second + '/*.js'],
+
+    dest: [_.dest, 'all', _.filename + '.js'].join('/')
+  },
+
+  /* Concat all the .js only in first */
+  first: {
+    src: _.src.first + '/*.js',
+
+    dest: [_.dest, 'first', _.filename + '.js'].join('/')
+  },
+
+  /* Concat all the .js only in second */
+  second: {
+    src: _.src.second + '/*.js',
+
+    dest: [_.dest, 'second', _.filename + '.js'].join('/')
+  }
+}
+
+module.exports = concatConfig
