@@ -1,312 +1,383 @@
-module.exports = function (grunt) {
+var grunt = require('grunt')
+var concatConfig = require('./configs/concat.config')
 
+var gruntConfig = {}
+
+gruntConfig.concat = {
+  options: concatConfig.options,
+
+  all: concatConfig.tasks.all,
+
+  first: concatConfig.tasks.first,
+
+  second: concatConfig.tasks.second
+}
+
+gruntConfig.uglify = {}
+
+gruntConfig.jshint = {}
+
+module.exports = function (grunt) {
   grunt.initConfig({
-    /* 读取 json 文件 package.json, 创建 pkg 对象 */
+    /* read package.json and creat GruntObject */
     pkg: grunt.file.readJSON('package.json'),
 
-    /*  grunt-concat 的 config */
+    /* The configs of grunt-concat */
     concat_configs: {
-      /* src 设置合并的源dirs */
+      /* Declare the source-directories */
       src: {
-        dir_1: 'src/concat_dir_1',
-        dir_2: 'src/concat_dir_2'
+        first: 'src/concat/first',
+        second: 'src/concat/second'
       },
-      /* dest 设置合并的目标dir */
-      dest: '<%= pkg.name %>/concat_build/<%= pkg.version %>',
-      /* file_name 设置合并文件name */
-      file_name: 'concat_file'
+
+      /* Declare the destination-directories */
+      dest: 'build/<%= pkg.name %>.concat/<%= pkg.version %>',
+
+      /* Declare the name of concated file*/
+      filename: 'index.concat'
     },
-    /* grunt-concat 的 merge_task：仅将两个目录下的全部 js 文件合并为一个 js 文件：没有压缩和美化 */
+
+    /* The tasks of grunt-concat */
     concat: {
+      /* The common options of all the tasks belongs to grunt-concat */
       options: {
-        /* 合并文件时的分隔标识 */
+        /* The separator used in index.concat.js */
         separator: '\n/* this is separator */\n'
       },
-      merge_task: {
+
+      /* Concat all the .js in first and second */
+      all: {
         src: [
-          '<%= concat_configs.src.dir_1 %>/*.js',
-          '<%= concat_configs.src.dir_2 %>/*.js'
+          '<%= concat_configs.src.first %>/*.js',
+          '<%= concat_configs.src.second %>/*.js'
         ],
-        dest: '<%= concat_configs.dest %>/merge_task/<%= concat_configs.file_name %>.js'
+
+        dest: '<%= concat_configs.dest %>/all/<%= concat_configs.filename %>.js'
+      },
+
+      /* Concat all the .js only in first */
+      first: {
+        src: '<%= concat_configs.src.first %>/*.js',
+
+        dest: '<%= concat_configs.dest %>/first/<%= concat_configs.filename %>.js'
+      },
+
+      /* Concat all the .js only in second */
+      second: {
+        src: '<%= concat_configs.src.second %>/*.js',
+
+        dest: '<%= concat_configs.dest %>/second/<%= concat_configs.filename %>.js'
       }
     },
 
-    /*  grunt-concat 的 config */
+    /* The configs of grunt-uglify */
     uglify_configs: {
-      compress_task: {
-        src: 'src/uglify_dir/**/',
-        dest: '<%= pkg.name %>/uglify_build/<%= pkg.version %>/compress_task',
-        file_name: 'uglify_file'
+      /* Compress all the files in  uglify, but not remain the nested structure of directory */
+      compress: {
+        src: 'src/uglify/**/',
+
+        dest: 'build/<%= pkg.name %>.uglify/<%= pkg.version %>',
+
+        filename: 'index.uglify'
       },
-      beautify_task: {
-        src: '<%= concat.merge_task.dest %>',
-        dest: '<%= pkg.name %>/uglify_build/<%= pkg.version %>/beautify_task/<%= concat_configs.file_name %>.min.js'
+
+      /* Compress and beautify the concated file outputed by the task of concat.all */
+      beautify: {
+        src: '<%= concat.all.dest %>',
+
+        dest: 'build/<%= pkg.name %>.uglify/<%= pkg.version %>',
+
+        filename: 'index.uglify'
       },
-      remain_dir_task :{
-        src: 'uglify_dir/**/',
-        dest: '<%= pkg.name %>/uglify_build/<%= pkg.version %>/remain_dir_task'
+
+      /* Compress all the files in  uglify, and also remain the nested structure of directory */
+      remain: {
+        src: 'src/uglify/**/',
+
+        dest: 'build/<%= pkg.name %>.uglify/<%= pkg.version %>',
       }
     },
-    /*
-     * grunt-uglify 的 compress_task：将 uglify_dir 目录下的全部 js 文件【压缩】, 没有保持原有的目录层级结构
-     * grunt-uglify 的 beautify_task：将 merge_task 合并后的 js 文件【压缩】【美化】
-     * grunt-uglify 的 remain_dir_task：将 uglify_dir 目录下的全部 js 文件压缩和美化, 保持原有的目录层级结构
-    */
+
+    /* The tasks of grunt-uglify */
     uglify: {
+      /* The common options of all the tasks belongs to grunt-uglify */
       options: {
         report: 'min',
-        banner: '/* banner: 将 uglify/files 下的 js 文件压缩 and 美化 */\n',
-        footer: '\n/* fotter: 将 uglify/files 下的 js 文件压缩 and 美化 */\n',
-        // 局部变量名压缩
-        mangle: true,
-        // 代码压缩
-        compress: {
-          // 去掉console.*
-          drop_console: true,
-          // 去掉debuuger语句
-          drop_debugger: true,
-          // 将访问对象属性的方式obj['pro_name']变成obj.pro_name
-          // 但是对于动态属性名的访问方式var name='pro_name;'obj[name]不会改变为.方式
-          properties: false,
-          // 优化boolean表达式
-          booleans: false,
-          // 未使用的var剔除, have a try to change true
-          unused: true,
-          // 合并var声明, have a try to change true
-          join_vars: false,
-          // 使用逗号分隔连续的状态,have a try to change true
-          sequences: false,
-          // 清除不能达到的代码段, 例如, return后的语句
-          // have a try to change true, alse set unused to true, that ensure clean all
-          dead_code: false,
-          // 将函数声明提升
-          hoist_funs: true,
-          // 将var声明提升, default is false
-          hoist_vars: false,
-          // 用于替换宏变量
-          global_defs: {DEBUG: "global_defs"},
-          // 计算常量表达式  "hello" + " world"  --> "hello world"
-          evaluate: true,
-          // 优化if-else结构
-          conditionals: false,
-          // 优化循环, while(……){……}  --> for(……){……}
-          loops: false,
-          // 优化比较表达式
-          comparisons: true
+
+        banner: '/* This is a banner added by grunt-uglify */\n',
+
+        footer: '\n/* This is a footer added by grunt-uglify  */\n',
+
+        mangle: true, // 局部变量名压缩
+
+        compress: { // 代码压缩
+          drop_console: true, // 去掉console.*
+
+          drop_debugger: true, // 去掉debuuger语句
+
+          properties: false, // 将访问对象属性的方式obj['pro_name']变成obj.pro_name, 但是对于动态属性名的访问方式var name='pro_name;'obj[name]不会改变为.方式
+
+          booleans: false, // 优化boolean表达式
+
+          unused: true, // 未使用的var剔除, have a try to change true
+
+          join_vars: false, // 合并var声明, have a try to change true
+
+          sequences: false, // 使用逗号分隔连续的状态,have a try to change true
+
+          dead_code: false, // 清除不能达到的代码段, 例如, return后的语句 (have a try to change true, alse set unused to true, that ensure clean all)
+
+          hoist_funs: true, // 将函数声明提升
+
+          hoist_vars: false, // 将var声明提升, default is false
+
+          global_defs: {DEBUG: 'global_defs'}, // 用于替换宏变量
+
+          evaluate: true, // 计算常量表达式  'hello' + ' world'  --> 'hello world'
+
+          conditionals: false, // 优化if-else结构
+
+          loops: false, // 优化循环, while(……){……}  --> for(……){……}
+
+          comparisons: true // 优化比较表达式
         },
+
         beautify: {
-          // 每行的起始缩进数
-          indent_start: 2,
-          // 换行的缩进数
-          indent_level: 2,
-          // 将对象属性用"来包裹
-          quote_keys: true,
-          // 冒号之后添加空格
-          space_colon: true,
-          // 是否保留comments
-          comments: false,
+          indent_start: 2, // 每行的起始缩进数
+
+          indent_level: 2, // 换行的缩进数
+
+          quote_keys: true, // 将对象属性用'来包裹
+
+          space_colon: true, // 冒号之后添加空格
+
+          comments: false, // 是否保留comments
+
           beautify: false
         },
+
         sourceMap: true,
-        // wrap and export can make expoose these logic
-        wrap: "exports",
+
+        wrap: 'exports', // wrap and export can make expoose these logic
+
         exportAll: true
       },
-      compress_task: {
+
+      compress: {
+        /* These options will rewrite the options in uglify.options */
         options: {
-          banner: '/* compress_task exec at <%= grunt.template.today("dd-mm-yyyy") %> */\n',
-          /* compress_task 的一下三项 options 和对应 uglify 的全局 options 是相反的 */
+          banner: '/* TimeStamp: <%= grunt.template.today("dd-mm-yyyy") %> */\n',
+
           sourceMap: false,
+
           wrap: '',
+
           exportAll: false
         },
+
         files: [
           {
-            src: '<%= uglify_configs.compress_task.src %>/*.js',
-            dest: '<%= uglify_configs.compress_task.dest %>/<%= uglify_configs.compress_task.file_name %>.js'
+            src: '<%= uglify_configs.compress.src %>/*.js',
+            dest: '<%= uglify_configs.compress.dest %>/compress/<%= uglify_configs.compress.filename %>.js'
           }
         ]
       },
-      beautify_task: {
+
+      beautify: {
+        /* These options will rewrite the options in uglify.options */
         options: {
-          banner: '/* banner: 将 <%= pkg.name %>/concat_build/<%= pkg.version %> 下的 concat_file.js 文件压缩 and 美化 */\n',
-          footer: '\n/* footer: 将 <%= pkg.name %>/concat_build/<%= pkg.version %> 下的 concat_file.js 文件压缩 and 美化 */\n',
           beautify: {
             beautify: true
           }
         },
+
         files: [
           {
-            src: '<%= uglify_configs.beautify_task.src %>',
-            dest: '<%= uglify_configs.beautify_task.dest %>'
+            src: '<%= uglify_configs.beautify.src %>',
+            dest: '<%= uglify_configs.beautify.dest %>/beautify/<%= uglify_configs.beautify.filename %>.js'
           }
         ]
       },
-      remain_dir_task:{
+
+      remain: {
+        /* These options will rewrite the options in uglify.options */
         options: {
-          banner: '/* remain_dir_task exec at <%= grunt.template.today("dd-mm-yyyy") %> */\n',
-          /* remain_dir_task 的一下三项 options 和对应 uglify 的全局 options 是相反的 */
           sourceMap: false,
+
           wrap: '',
+
           exportAll: false
         },
+
         files: [
           {
             expand: true,
+
             cwd: 'src/',
-            src: '<%= uglify_configs.remain_dir_task.src %>/*.js',
-            dest: '<%= uglify_configs.remain_dir_task.dest %>'
+
+            src: '<%= uglify_configs.remain.src %>/*.js',
+
+            dest: '<%= uglify_configs.remain.dest %>/remain/'
           }
         ]
       }
     },
 
+
     jshint: {
       check: {
         options: {
-          // 不要求全部函数都使用ES5的strict mode
-          strict: false,
-          // 可以自定义全局变量
+          strict: false, // 不要求全部函数都使用ES5的strict mode
+
           globals: {
-            xiaoshao: true
+            xiaoshao: true // 可以自定义全局变量
           },
-          // 禁止使用位【运算符】
-          bitwise: true,
-          // 要求命名符合【驼峰式】
-          camelcase: true,
-          // 不允许出现【未定义】的情况
-          undef: true,
-          // 不允许出现【未使用】的情况
-          unused: true,
-          // 块级代码要放在{}中
-          curly: true,
-          // 禁止Js的强制类型转换, 使用===和！==
-          eqeqeq: true,
-          // 按照ES3的标准检查代码: 保留字不能用于命名
-          es3: true,
-          // for-in中要hasOwnProperty过滤掉继承来的属性
-          forin: true,
-          // 不可以缺省语句结尾的分号
-          asi: false,
-          // 允许扩展内置的对象原型
-          freeze: false,
-          // ？匿名函数的调用格式？
-          immed: true,
-          // ？设置特定的tab宽度？
-          indent: 2,
-          //  禁止函数调用先于函数声明: true | false | 'nofunc'
-          latedef: true,
-          // 要求声明构造函数: 使用首大写; 调用构造函数: 不可以缺省new operator
-          newcap: true,
-          // 禁止使用arguments.callee 和 arguments.caller
-          noarg: true,
-          // 禁止出现空块{}, 但是空函数是没有问题的!
-          noempty: true,
-          // ？warns about "non-breaking whitespace" characters？
-          nonbsp: true,
-          // prohibits the use of constructor functions for side-effects : 'var some = new Some()'  is right !
-          nonew: true,
-          // prohibits the use of unary increment and decrement operators
-          plusplus: true,
-          // 强制引号的类型
-          quotmark: 'single',
-          // 函数参数的最大数目
-          maxparams: 3,
-          // 最大的嵌套层数
-          maxdepth: 2,
-          // 每个函数的最大状态数
-          maxstatements: 500,
-          // 最大的圈复杂度
-          maxcomplexity: 10,
-          // 一行的最大长度
-          maxlen: 1000,
-          // 不允许在if() / for() / while()中的条件位置使用赋值语句
-          boss: false,
-          // 允许debugger出现
-          debug: true,
-          // 允许使用 == null 但是同时要求eqeqeq: false
-          eqnull: true,
-          // 使用ES6的特殊语法
-          esnext: true,
-          // 允许使用eval
-          evil: true,
-          // ？允许应该出现赋值或函数调用的地方使用表达式？
-          expr: false,
-          // 允许在控制体内定义变量而在外部使用
-          funcscope: true,
-          // 不允许全局严格模式
-          globalstrict: false,
-          // ？允许iterator？
-          iterator: true,
-          // 允许单行控制块省略分号
-          lastsemic: true,
-          // 允许comma-first coding style
-          laxcomma: true,
-          // ？允许不安全的行中断？
-          laxbreak: false,
-          // 允许循环中定义函数, 但是一般会带来一些问题，不过可以使用闭包来解决
-          loopfunc: true,
-          // jshint中断扫描前允许的最大错误数, 默认值是50
-          maxerr: 5,
-          // 允许多行字符串, / 后面的空格仍会引起警告 !
-          multistr: true,
-          // 允许无效的typeof操作值
-          notypeof: true,
-          // 允许使用__proto__
-          proto: true,
-          //  ？suppresses warnings about the use of script-targeted URLs, such as javascript:....？
-          scripturl: false,
-          // declaring a variable that had been already declared somewhere in the outer scope is ok
-          shadow: true,
-          // using [] notation when it can be expressed in dot notation is accepted
-          sub: true,
-          // 允许 new function() {...} 和 new Object;
-          supernew: true,
-          // 允许严格模式下, 在非构造函数中使用this
-          validthis: true,
-          // 不允许发生器中没有yield语句
-          noyield: false,
-          //  defines globals exposed by modern browsers:
-          // all the way from good old document and navigator to the HTML5 FileReader
-          // and other new developments in the browser world.
-          // Note: This option doesn't expose variables like alert or console
-          browser: true,
-          // defines globals that are usually used for logging poor-man's debugging:
-          // console, alert, etc.
-          devel: true,
-          // defines globals exposed by the jQuery JavaScript library
-          jquery: true,
-          //  defines globals available program is running inside of the Node runtime environment
-          node: true,
-          //  defines non-standard but widely adopted globals such as escape and unescape
-          nonstandard: true
+
+          bitwise: true, // 禁止使用位【运算符】
+
+          camelcase: true, // 要求命名符合【驼峰式】
+
+          undef: true, // 不允许出现【未定义】的情况
+
+          unused: true, // 不允许出现【未使用】的情况
+
+          curly: true,  // 块级代码要放在{}中
+
+          eqeqeq: true, // 禁止Js的强制类型转换, 使用===和！==
+
+          es3: true, // 按照ES3的标准检查代码: 保留字不能用于命名
+
+          forin: true, // for-in中要hasOwnProperty过滤掉继承来的属性
+
+          asi: false, // 不可以缺省语句结尾的分号
+
+          freeze: false, // 允许扩展内置的对象原型
+
+          immed: true, // ？匿名函数的调用格式？
+
+          indent: 2, // ？设置特定的tab宽度？
+
+          latedef: true, // 禁止函数调用先于函数声明: true | false | 'nofunc'
+
+          newcap: true, // 要求声明构造函数: 使用首大写; 调用构造函数: 不可以缺省new operator
+
+          noarg: true, // 禁止使用arguments.callee 和 arguments.caller
+
+          noempty: true, // 禁止出现空块{}, 但是空函数是没有问题的!
+
+          nonbsp: true, // ？warns about 'non-breaking whitespace' characters？
+
+          nonew: true, // prohibits the use of constructor functions for side-effects : 'var some = new Some()'  is right !
+
+          plusplus: true, // prohibits the use of unary increment and decrement operators
+
+          quotmark: 'single', // 强制引号的类型
+
+          maxparams: 3, // 函数参数的最大数目
+
+          maxdepth: 2, // 最大的嵌套层数
+
+          maxstatements: 500, // 每个函数的最大状态数
+
+          maxcomplexity: 10, // 最大的圈复杂度
+
+          maxlen: 1000, // 一行的最大长度
+
+          boss: false, // 不允许在if() / for() / while()中的条件位置使用赋值语句
+
+          debug: true, // 允许debugger出现
+
+          eqnull: true, // 允许使用 == null 但是同时要求eqeqeq: false
+
+          esnext: true, // 使用ES6的特殊语法
+
+          evil: true, // 允许使用eval
+
+          expr: false, // ？允许应该出现赋值或函数调用的地方使用表达式？
+
+          funcscope: true, // 允许在控制体内定义变量而在外部使用
+
+          globalstrict: false, // 不允许全局严格模式
+
+          iterator: true, // ？允许iterator？
+
+          lastsemic: true, // 允许单行控制块省略分号
+
+          laxcomma: true, // 允许comma-first coding style
+
+          laxbreak: false, // ？允许不安全的行中断？
+
+          loopfunc: true, // 允许循环中定义函数, 但是一般会带来一些问题，不过可以使用闭包来解决
+
+          maxerr: 5, // jshint中断扫描前允许的最大错误数, 默认值是50
+
+          multistr: true, // 允许多行字符串, / 后面的空格仍会引起警告 !
+
+          notypeof: true, // 允许无效的typeof操作值
+
+          proto: true, // 允许使用__proto__
+
+          scripturl: false, // ？suppresses warnings about the use of script-targeted URLs, such as javascript:....？
+
+          shadow: true, // declaring a variable that had been already declared somewhere in the outer scope is ok
+
+          sub: true, // using [] notation when it can be expressed in dot notation is accepted
+
+          supernew: true,  // 允许 new function() {...} 和 new Object;
+
+          validthis: true, // 允许严格模式下, 在非构造函数中使用this
+
+          noyield: false, // 不允许发生器中没有yield语句
+
+          browser: true,  //  defines globals exposed by modern browsers: all the way from good old document and navigator to the HTML5 FileReader, and other new developments in the browser world. Note: This option doesn't expose variables like alert or console
+
+          devel: true,  // defines globals that are usually used for logging poor-man's debugging: console, alert, etc.
+
+          jquery: true, // defines globals exposed by the jQuery JavaScript library
+
+          node: true, //  defines globals available program is running inside of the Node runtime environment
+
+          nonstandard: true //  defines non-standard but widely adopted globals such as escape and unescape
+
           // other Environments options let JSHint know about some pre-defined global variables.
           // couch / dojo / mootools / phantom / prototypejs / rhino / worker / wsh / yui
         },
+
         files: {
-          // jshint 的目标文件
-          src: ['src/jshint_dir/*.js']
+          src: 'src/jshint/*.js'
         }
       }
     }
-  });
+  })
 
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-concat')
+  grunt.loadNpmTasks('grunt-contrib-uglify')
+  grunt.loadNpmTasks('grunt-contrib-jshint')
 
-  grunt.registerTask('default', ['concat:merge_task', 'uglify:compress_task'])
-  grunt.registerTask('beautify', ['uglify:beautify_task'])
-  grunt.registerTask('remain', ['uglify:remain_dir_task'])
-  grunt.registerTask('check', ['jshint:check'])
-
-  // grunt xiaoshao:bengin:end
-  // 传递冒号分割的参数
-  grunt.registerTask('xiaoshao', 'A sample xiaoshao-defined task.', function (arg1, arg2) {
+  grunt.registerTask('merge', [
+    'concat:all',
+    'concat:first',
+    'concat:second'
+  ])
+  grunt.registerTask('compress', [
+    'uglify:compress'
+  ])
+  grunt.registerTask('beautify', [
+    'uglify:beautify'
+  ])
+  grunt.registerTask('remain', [
+    'uglify:remain'
+  ])
+  grunt.registerTask('check', [
+    'jshint:check'
+  ])
+  grunt.registerTask('mytask', 'A sample user defined task.', function (stratTime, endTime) {
+    // Define a user defined task, and execute by `grunt mytask:2016-9-9:2016-10-10`
+    // Use `:` to pass arguments to grunt task
     if (arguments.length === 0) {
-      grunt.log.writeln(this.name + ", no args");
+      grunt.log.writeln(this.name + ' need startTime and endTime !')
     } else {
-      grunt.log.writeln("Tast(Target) " + this.name + ": arg1=" + arg1 + ", arg2=" + arg2);
+      grunt.log.writeln(this.name + ': stratTime=' + stratTime + 'endTime = ' + endTime)
     }
-  });
-};
+  })
+}
