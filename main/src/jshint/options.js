@@ -43,10 +43,16 @@ module.exports = {
       unused: true, // 不允许出现未使的情况
     }
   },
-
-  bitwise: true, // 禁止使用位【运算符】
-
-  undef: true, // 不允许出现【未定义】的情况
+  undef: {
+    both: {
+      undef: true // 不允许出现未定义的情况
+    }
+  },
+  bitwise: {
+    both: {
+      bitwise: true // 禁止使用位【运算符】
+    }
+  },
 
 
   curly: true,  // 块级代码要放在{}中
