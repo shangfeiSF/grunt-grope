@@ -24,11 +24,7 @@ gruntConfig.uglify = {
   remain: uglifyConfig.tasks.remain
 }
 
-gruntConfig.jshint = {
-  options: jshintConfig.options,
-
-  check: jshintConfig.tasks.check
-}
+gruntConfig.jshint = jshintConfig.tasks
 
 module.exports = function (grunt) {
   grunt.initConfig(gruntConfig)
@@ -37,11 +33,14 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-jshint')
 
+  // grunt-concat-tasks
   grunt.registerTask('merge', [
     'concat:all',
     'concat:first',
     'concat:second'
   ])
+
+  // grunt-uglify-tasks
   grunt.registerTask('compress', [
     'uglify:compress'
   ])
@@ -51,9 +50,24 @@ module.exports = function (grunt) {
   grunt.registerTask('remain', [
     'uglify:remain'
   ])
-  grunt.registerTask('check', [
-    'jshint:check'
+  grunt.registerTask('format', [
+    'uglify:compress',
+    'uglify:beautify',
+    'uglify:remain'
   ])
+
+  // grunt-jshint-tasks
+  Object.keys(gruntConfig.jshint).forEach(function (key) {
+    var task = gruntConfig.jshint[key]
+
+    var taskName = (task.type === 'fixed' ? 'f' : 'e') + task.index
+
+    grunt.registerTask(taskName, [
+      'jshint:' + key
+    ])
+  })
+
+  // user-defined-tasks
   grunt.registerTask('mytask', 'A sample user defined task.', function (stratTime, endTime) {
     // Define a user defined task, and execute by `grunt mytask:2016-9-9:2016-10-10`
     // Use `:` to pass arguments to grunt task

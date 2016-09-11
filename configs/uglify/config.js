@@ -1,9 +1,9 @@
 var grunt = require('grunt')
-var pkg = grunt.file.readJSON('../../package.json')
+var pkg = grunt.file.readJSON('package.json')
 
 var concatConfig = require('../concat/exports')
 
-var baseDest = ['main', 'build', pkg.name + '.uglify', pkg.version].join('/')
+var baseDest = ['main', 'build', 'uglify', pkg.name + '.' + pkg.version].join('/')
 
 var config = {
   /* Compress all the files in  uglify, but not remain the nested structure of directory */
@@ -27,9 +27,11 @@ var config = {
 
   /* Compress all the files in  uglify, and also remain the nested structure of directory */
   remain: {
-    src: 'main/src/uglify/**/',
+    cwd: 'main/src/uglify/',
 
-    dest: baseDest + '/remain'
+    src: '**/',
+
+    dest: baseDest + '/remain',
   }
 }
 

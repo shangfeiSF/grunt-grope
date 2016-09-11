@@ -1,17 +1,4 @@
-// --globalstrict : using global strict mode is allowed when globalstrict is true
-// 'use strict';
-function main(argA, argB) {
-  var t = 123;
-  var t = 890;
-  console.log(t);
-
-  var obj = {}
-  for (var y in obj) {
-    console.log(t);
-  }
-  for (var y in obj) {
-    console.log(t);
-  }
+function test(argA, argB) {
 
   // --camelcase : if try to rename argA or argB using arg_a or arg_b, thus jshint will warn
   console.log(argA);
@@ -21,7 +8,7 @@ function main(argA, argB) {
   // 'use strict';
 
   // --globals : some vars that are defined as global var
-  console.log(someVar);
+  console.log(someVarAsGlobal);
 
   // --unused & --undef : if commentize `var sum = cal(10, 20);`
   // thus `function cal(num1, num2){……}` will not be used and `sum` will be an undefined var
@@ -97,7 +84,8 @@ function main(argA, argB) {
   // before();
   function before() {
     console.log('I like coding!');
-  };
+  }
+
   before();
 
   // --newcap : requires  to capitalize names of constructor functions and the function should be used with  new operator !
@@ -246,7 +234,7 @@ function main(argA, argB) {
   // if lastsemic is fasle, program should use ' var name = 'Anton'; return name; ' to avoid warning, otherwise jshint will warning missing semicolons
   var cat = (function () {
     var name = 'Anton';
-    return name
+    return name;
   }());
   console.log(cat);
 
@@ -299,7 +287,8 @@ function main(argA, argB) {
       var herex = 20;
     }
     return herex;
-  };
+  }
+
   console.log(here());
 
   // --sub : using [] notation when it can be expressed in dot notation is accpeted
@@ -330,7 +319,8 @@ function main(argA, argB) {
   function strictFn(num) {
     'use strict';
     this.windowVar = num;
-  };
+  }
+
   var testFn = strictFn(1024);
   console.log(testFn);
 
@@ -341,7 +331,8 @@ function main(argA, argB) {
     console.log('TestYield');
     yield 1;
     yield 2;
-  };
+  }
+
   var testYield = new TestYield();
   var test1 = testYield.next();
   var test2 = testYield.next();
@@ -368,4 +359,4 @@ function main(argA, argB) {
   console.log(unescape(eurl));
 }
 
-main('name', 'age')
+test('name', 'age');

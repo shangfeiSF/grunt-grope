@@ -1,5 +1,5 @@
 var grunt = require('grunt')
-var pkg = grunt.file.readJSON('../../package.json')
+var pkg = grunt.file.readJSON('package.json')
 
 var config = {
   /* Declare the source-directories */
@@ -9,7 +9,7 @@ var config = {
   },
 
   /* Declare the destination-directories */
-  dest: ['main', 'build', pkg.name + '.concat', pkg.version].join('/'),
+  dest: ['main', 'build', 'concat', pkg.name + '.' + pkg.version].join('/'),
 
   /* Declare the name of concated file*/
   filename: 'index.concat.js'

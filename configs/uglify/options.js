@@ -1,9 +1,9 @@
 module.exports = {
   report: 'min',
 
-  banner: '/* This is a banner added by grunt-uglify */\n',
+  banner: '/* This is a banner added by grunt-uglify */',
 
-  footer: '\n/* This is a footer added by grunt-uglify  */\n',
+  footer: '\n/* This is a footer added by grunt-uglify */',
 
   mangle: true, // 局部变量名压缩
 

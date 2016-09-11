@@ -37,7 +37,7 @@ uglifyConfig.tasks = {
 
     files: [
       {
-        src: config.beautify.src + '/*.js',
+        src: config.beautify.src,
         dest: [config.beautify.dest, config.beautify.filename].join('/')
       }
     ]
@@ -57,7 +57,7 @@ uglifyConfig.tasks = {
       {
         expand: true,
 
-        cwd: 'main/src/',
+        cwd: config.remain.cwd,
 
         src: config.remain.src + '/*.js',
 
