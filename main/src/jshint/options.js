@@ -38,6 +38,11 @@ module.exports = {
       }
     }
   },
+  unused: {
+    both: {
+      unused: true, // 不允许出现未使的情况
+    }
+  },
 
   bitwise: true, // 禁止使用位【运算符】
 
