@@ -1,4 +1,17 @@
-function test(argA, argB) {
+// --globalstrict : using global strict mode is allowed when globalstrict is true
+// 'use strict';
+function main(argA, argB) {
+  var t = 123;
+  var t = 890;
+  console.log(t);
+
+  var obj = {}
+  for (var y in obj) {
+    console.log(t);
+  }
+  for (var y in obj) {
+    console.log(t);
+  }
 
   // --camelcase : if try to rename argA or argB using arg_a or arg_b, thus jshint will warn
   console.log(argA);
@@ -8,7 +21,7 @@ function test(argA, argB) {
   // 'use strict';
 
   // --globals : some vars that are defined as global var
-  console.log(someVarAsGlobal);
+  console.log(someVar);
 
   // --unused & --undef : if commentize `var sum = cal(10, 20);`
   // thus `function cal(num1, num2){……}` will not be used and `sum` will be an undefined var
@@ -84,8 +97,7 @@ function test(argA, argB) {
   // before();
   function before() {
     console.log('I like coding!');
-  }
-
+  };
   before();
 
   // --newcap : requires  to capitalize names of constructor functions and the function should be used with  new operator !
@@ -234,7 +246,7 @@ function test(argA, argB) {
   // if lastsemic is fasle, program should use ' var name = 'Anton'; return name; ' to avoid warning, otherwise jshint will warning missing semicolons
   var cat = (function () {
     var name = 'Anton';
-    return name;
+    return name
   }());
   console.log(cat);
 
@@ -287,8 +299,7 @@ function test(argA, argB) {
       var herex = 20;
     }
     return herex;
-  }
-
+  };
   console.log(here());
 
   // --sub : using [] notation when it can be expressed in dot notation is accpeted
@@ -319,8 +330,7 @@ function test(argA, argB) {
   function strictFn(num) {
     'use strict';
     this.windowVar = num;
-  }
-
+  };
   var testFn = strictFn(1024);
   console.log(testFn);
 
@@ -331,8 +341,7 @@ function test(argA, argB) {
     console.log('TestYield');
     yield 1;
     yield 2;
-  }
-
+  };
   var testYield = new TestYield();
   var test1 = testYield.next();
   var test2 = testYield.next();
@@ -352,11 +361,10 @@ function test(argA, argB) {
   // --node : defines globals available program is running inside of the Node runtime environment
   var module = require('cluster');
   console.log(module);
-
   // --nonstandard : defines non-standard but widely adopted globals such as escape and unescape
   var url = 'www google com';
   var eurl = escape(url);
   console.log(unescape(eurl));
 }
 
-test('name', 'age');
+main('name', 'age')

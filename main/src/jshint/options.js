@@ -1,24 +1,42 @@
 module.exports = {
   demo: {
-    unused: true, // 不允许出现未使的情况
+    both: {
+      unused: true, // 不允许出现未使的情况
 
-    asi: false, // 不可以缺省语句结尾的分号
+      asi: false, // 不可以缺省语句结尾的分号
 
-    forin: true, // for-in中要hasOwnProperty过滤掉继承来的属性
+      forin: true, // for-in中要hasOwnProperty过滤掉继承来的属性
+    }
   },
-
   camelcase: {
-    camelcase: true, // 要求驼峰式命名
+    both: {
+      camelcase: true, // 要求驼峰式命名
+    }
   },
-
   strict: {
-    strict: true // 要求全部函数都使用ES5的strict mode
+    both: {
+      strict: true // 要求全部函数都使用ES5的strict mode
+    }
   },
-
-  strict: false, // 不
-
   globals: {
-    someVarAsGlobal: true // 可以自定义全局变量
+    errors: {
+      devel: true, // 允许出现console, alert等
+
+      undef: true, // 不允许出现未定义的情况
+
+      globals: {
+        someVar: false // 不可以自定义全局变量
+      }
+    },
+    fixed: {
+      devel: true, // 允许出现console, alert等
+
+      undef: true, // 不允许出现未定义的情况
+
+      globals: {
+        someVar: true // 可以自定义全局变量
+      }
+    }
   },
 
   bitwise: true, // 禁止使用位【运算符】

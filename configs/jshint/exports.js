@@ -19,7 +19,9 @@ function makeTasks(dir, type) {
     tasks[optionName + '_' + type] = {
       index: index,
       type: type,
-      options: options[optionName],
+      options: options[optionName].both ?
+        options[optionName].both :
+        options[optionName][type],
       files: {
         src: ['main/src/jshint', type, file].join('/')
       }
