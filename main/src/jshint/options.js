@@ -111,14 +111,26 @@ module.exports = {
       newcap: true // 不仅要求声明构造函数时使用首大写, 而且调用构造函数时不可以缺省new
     }
   },
-
-  noarg: true, // 禁止使用arguments.callee 和 arguments.caller
-
-  noempty: true, // 禁止出现空块{}, 但是空函数是没有问题的!
-
-  nonbsp: true, // ？warns about 'non-breaking whitespace' characters？
-
-  nonew: true, // prohibits the use of constructor functions for side-effects : 'var some = new Some()'  is right !
+  noarg: {
+    both: {
+      noarg: true // 禁止使用arguments.callee 和 arguments.caller
+    }
+  },
+  noempty: {
+    both: {
+      noempty: true, // 禁止出现空块{}, 但是空函数是没有问题的!
+    }
+  },
+  nonbsp: {
+    both: {
+      nonbsp: true // 警告非换行的空格
+    }
+  },
+  nonew: {
+    both: {
+      nonew: true // 禁止调用构造函数时不返回实例
+    }
+  },
 
   plusplus: true, // prohibits the use of unary increment and decrement operators
 

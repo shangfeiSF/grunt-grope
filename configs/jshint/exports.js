@@ -17,35 +17,48 @@ var errorsDir = path.join(mainDir, 'src/jshint/errors')
 var fixedDir = path.join(mainDir, 'src/jshint/fixed')
 var options = require(path.join(mainDir, 'src/jshint/options.js'))
 
-function makeTasks(dir, type) {
+function makeTasks(options, configs) {
   var tasks = {}
-  var files = fs.readdirSync(dir)
 
-  files.forEach(function (file) {
-    var params = file.split('\.')
-    var index = params[0]
-    var optionName = params[1]
+  configs.forEach(function (config) {
+    var dir = config.dir
+    var type = config.type
 
-    tasks[optionName + '_' + type] = {
-      index: index,
-      type: type,
-      options: options[optionName].both ?
-        options[optionName].both :
-        options[optionName][type],
-      files: {
-        src: ['main/src/jshint', type, file].join('/')
+    var files = fs.readdirSync(dir)
+
+    files.forEach(function (file) {
+      var params = file.split('\.')
+      var index = params[0]
+      var optionName = params[1]
+
+      tasks[optionName + '_' + type] = {
+        index: index,
+        type: type,
+        options: options[optionName].both ?
+          options[optionName].both :
+          options[optionName][type],
+        files: {
+          src: ['main/src/jshint', type, file].join('/')
+        }
       }
-    }
+    })
   })
 
   return tasks
 }
 
 var jshintConfig = {}
-var errors = makeTasks(errorsDir, 'errors')
-var fixed = makeTasks(fixedDir, 'fixed')
 
-jshintConfig.tasks = Object.assign(errors, fixed)
+jshintConfig.tasks = makeTasks(options, [
+  {
+    dir: errorsDir,
+    type: 'errors'
+  },
+  {
+    dir: fixedDir,
+    type: 'fixed'
+  }
+])
 
 if (nopt_options.log) {
   fs.writeFileSync(path.join(__dirname, 'log/tasks.json'), JSON.stringify(jshintConfig, null, 2), {
