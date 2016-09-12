@@ -131,14 +131,29 @@ module.exports = {
       nonew: true // 禁止调用构造函数时不返回实例
     }
   },
-
-  plusplus: true, // prohibits the use of unary increment and decrement operators
-
-  quotmark: 'single', // 强制引号的类型
-
-  maxparams: 3, // 函数参数的最大数目
-
-  maxdepth: 2, // 最大的嵌套层数
+  plusplus: {
+    both: {
+      plusplus: true // 禁止使用自增和自减运算符
+    }
+  },
+  quotmark: {
+    errors: {
+      quotmark: 'single', // 强制引号的类型：单引号
+    },
+    fixed: {
+      quotmark: 'double', // 强制引号的类型：双引号
+    }
+  },
+  maxparams: {
+    both: {
+      maxparams: 2, // 函数参数的最大数目
+    }
+  },
+  maxdepth: {
+    both: {
+      maxdepth: 2, // 最大的嵌套层数
+    }
+  },
 
   maxstatements: 500, // 每个函数的最大状态数
 
