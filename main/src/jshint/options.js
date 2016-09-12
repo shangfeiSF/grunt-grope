@@ -78,16 +78,39 @@ module.exports = {
       forin: true // for-in中要hasOwnProperty过滤掉继承来的属性
     }
   },
-
-  freeze: false, // 允许扩展内置的对象原型
-
-  immed: true, // ？匿名函数的调用格式？
-
-  indent: 2, // ？设置特定的tab宽度？
-
-  latedef: true, // 禁止函数调用先于函数声明: true | false | 'nofunc'
-
-  newcap: true, // 要求声明构造函数: 使用首大写; 调用构造函数: 不可以缺省new operator
+  asi: {
+    both: {
+      asi: false // 不可以缺省语句结尾的分号
+    }
+  },
+  freeze: {
+    errors: {
+      freeze: true, // 不允许扩展内置的对象原型
+    },
+    fixed: {
+      freeze: false, // 允许扩展内置的对象原型
+    }
+  },
+  immed: {
+    both: {
+      immed: true
+    }
+  },
+  indent: {
+    both: {
+      indent: 4
+    }
+  },
+  latedef: {
+    both: {
+      latedef: true // 禁止函数调用先于函数声明: true | false | 'nofunc'
+    }
+  },
+  newcap: {
+    both: {
+      newcap: true // 不仅要求声明构造函数时使用首大写, 而且调用构造函数时不可以缺省new
+    }
+  },
 
   noarg: true, // 禁止使用arguments.callee 和 arguments.caller
 
