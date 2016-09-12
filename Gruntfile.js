@@ -60,7 +60,7 @@ module.exports = function (grunt) {
   Object.keys(gruntConfig.jshint).forEach(function (key) {
     var task = gruntConfig.jshint[key]
 
-    var taskName = (task.type === 'fixed' ? 'f' : 'e') + task.index
+    var taskName = task.index + (task.type === 'fixed' ? 'f' : 'e')
 
     grunt.registerTask(taskName, [
       'jshint:' + key

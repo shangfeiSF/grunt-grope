@@ -53,14 +53,31 @@ module.exports = {
       bitwise: true // 禁止使用位【运算符】
     }
   },
-
-
-  curly: true,  // 块级代码要放在{}中
-
-  eqeqeq: true, // 禁止Js的强制类型转换, 使用===和！==
-
-  es3: true, // 按照ES3的标准检查代码: 保留字不能用于命名
-
+  curly: {
+    both: {
+      curly: true, // 块级代码必须放在{}中
+    }
+  },
+  eqeqeq: {
+    both: {
+      eqeqeq: true // 禁止Js的强制类型转换, 使用===和！==
+    }
+  },
+  esversion: {
+    errors: {
+      // esversion: 5, // 按照指定的ES标准检查代码(3, 5, 6)
+      es5: true // Use esversion: 5 instead.
+    },
+    fixed: {
+      //esversion: 6, // 按照指定的ES标准检查代码(3, 5, 6)
+      esnext: true // Use esversion: 6 instead.
+    }
+  },
+  forin: {
+    both: {
+      forin: true // for-in中要hasOwnProperty过滤掉继承来的属性
+    }
+  },
 
   freeze: false, // 允许扩展内置的对象原型
 
@@ -99,8 +116,6 @@ module.exports = {
   debug: true, // 允许debugger出现
 
   eqnull: true, // 允许使用 == null 但是同时要求eqeqeq: false
-
-  esnext: true, // 使用ES6的特殊语法
 
   evil: true, // 允许使用eval
 
