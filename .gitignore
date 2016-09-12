@@ -2,4 +2,3 @@
 node_modules/
 npm-debug.log
 main/build/
-configs/jshint/log/*.json

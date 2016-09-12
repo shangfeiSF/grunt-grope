@@ -1,6 +1,16 @@
 var fs = require('fs')
 var path = require('path')
 
+var nopt = require('nopt')
+var colors = require('colors')
+
+var nopt_options = nopt({
+  'log': Boolean,
+}, {
+  'l': ['--log', 'true'],
+  'nl': ['--log', 'false']
+}, process.argv, 2)
+
 var mainDir = path.join(__dirname, '../../main')
 
 var errorsDir = path.join(mainDir, 'src/jshint/errors')
@@ -37,12 +47,14 @@ var fixed = makeTasks(fixedDir, 'fixed')
 
 jshintConfig.tasks = Object.assign(errors, fixed)
 
-fs.writeFileSync(path.join(__dirname, 'log/tasks.json'), JSON.stringify(jshintConfig, null, 2), {
-  encoding: 'utf-8',
-  flag: 'w'
-}, function (error) {
-  if (error) throw error
-  console.log('Saved jshint tasks config!')
-})
+if (nopt_options.log) {
+  fs.writeFileSync(path.join(__dirname, 'log/tasks.json'), JSON.stringify(jshintConfig, null, 2), {
+    encoding: 'utf-8',
+    flag: 'w'
+  })
+  console.log('------------------------------------------------------------------------'.white)
+  console.log('Saved jshint tasks config!'.magenta)
+  console.log('------------------------------------------------------------------------'.white)
+}
 
 module.exports = jshintConfig
