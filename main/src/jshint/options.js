@@ -154,12 +154,24 @@ module.exports = {
       maxdepth: 2, // 最大的嵌套层数
     }
   },
-
-  maxstatements: 500, // 每个函数的最大状态数
-
-  maxcomplexity: 10, // 最大的圈复杂度
-
-  maxlen: 1000, // 一行的最大长度
+  maxstatements: {
+    both: {
+      maxstatements: 4 // 每个函数的最大状态数
+    }
+  },
+  maxcomplexity: {
+    both: {
+      maxcomplexity: 2 // 最大的圈复杂度
+    }
+  },
+  maxlen: {
+    errors: {
+      maxlen: 57 // 一行的最大长度
+    },
+    fixed: {
+      maxlen: 58 // 一行的最大长度
+    }
+  },
 
   boss: false, // 不允许在if() / for() / while()中的条件位置使用赋值语句
 
