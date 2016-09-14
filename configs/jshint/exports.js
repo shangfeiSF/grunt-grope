@@ -24,7 +24,7 @@ function makeTasks(options, configs) {
     var dir = config.dir
     var type = config.type
 
-    var files = fs.readdirSync(dir)
+    var files = fs.readdirSync(dir).sort()
 
     files.forEach(function (file) {
       var params = file.split('\.')
