@@ -172,24 +172,67 @@ module.exports = {
       maxlen: 58 // 一行的最大长度
     }
   },
+  boss: {
+    both: {
+      boss: false // 不允许在if() / for() / while()中的条件位置使用赋值语句
+    }
+  },
+  debug: {
+    both: {
+      debug: false // 不允许debugger出现
+    }
+  },
+  eqnull: {
+    both: {
+      eqnull: false, // 不允许使用==和!=比较null和undefined
+      eqeqeq: false
+    }
+  },
+  evil: {
+    errors: {
+      evil: false, // 不允许使用eval
+    },
+    fixed: {
+      evil: true, // 允许使用eval
+    }
+  },
+  expr: {
+    both: {
+      expr: false // 不允许应该出现赋值或函数调用的地方使用表达式
+    }
+  },
+  funcscope: {
+    errors: {
+      funcscope: false, // 不允许在控制体内定义变量而在外部使用
+    },
+    fixed: {
+      funcscope: true, // 允许在控制体内定义变量而在外部使用
+    }
+  },
+  globalstrict: {
+    both: {
+      globalstrict: false, // 不允许全局严格模式
+    }
+  },
+  iterator: {
+    errors: {
+      esnext: true, // Use esversion: 6
+      iterator: false // 不允许使用ES6的__iterator__ 属性
+    },
+    fixed: {
+      esnext: true, // Use esversion: 6
+      iterator: true // 允许使用ES6的__iterator__ 属性
+    }
+  },
+  lastsemic: {
+    errors: {
+      lastsemic: false, // 不允许单行控制块省略分号
+    },
+    fixed: {
+      lastsemic: true, // 允许单行控制块省略分号
+    }
+  },
 
-  boss: false, // 不允许在if() / for() / while()中的条件位置使用赋值语句
-
-  debug: true, // 允许debugger出现
-
-  eqnull: true, // 允许使用 == null 但是同时要求eqeqeq: false
-
-  evil: true, // 允许使用eval
-
-  expr: false, // ？允许应该出现赋值或函数调用的地方使用表达式？
-
-  funcscope: true, // 允许在控制体内定义变量而在外部使用
-
-  globalstrict: false, // 不允许全局严格模式
-
-  iterator: true, // ？允许iterator？
-
-  lastsemic: true, // 允许单行控制块省略分号
 
   laxcomma: true, // 允许comma-first coding style
 
