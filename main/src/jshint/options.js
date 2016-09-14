@@ -232,9 +232,14 @@ module.exports = {
       lastsemic: true, // 允许单行控制块省略分号
     }
   },
-
-
-  laxcomma: true, // 允许comma-first coding style
+  laxcomma: {
+    errors: {
+      laxcomma: false, // 不允许逗号前置
+    },
+    fixed: {
+      laxcomma: true, // 允许逗号前置
+    }
+  },
 
   laxbreak: false, // ？允许不安全的行中断？
 
