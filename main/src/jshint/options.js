@@ -234,20 +234,50 @@ module.exports = {
   },
   laxcomma: {
     errors: {
-      laxcomma: false, // 不允许逗号前置
+      laxcomma: false // 不允许逗号前置
     },
     fixed: {
-      laxcomma: true, // 允许逗号前置
+      laxcomma: true // 允许逗号前置
     }
   },
-
-  laxbreak: false, // ？允许不安全的行中断？
-
-  loopfunc: true, // 允许循环中定义函数, 但是一般会带来一些问题，不过可以使用闭包来解决
-
-  maxerr: 5, // jshint中断扫描前允许的最大错误数, 默认值是50
-
-  multistr: true, // 允许多行字符串, / 后面的空格仍会引起警告 !
+  laxbreak: {
+    errors: {
+      laxcomma: true,
+      laxbreak: false // 不允许不安全的换行中断
+    },
+    fixed: {
+      laxcomma: true,
+      laxbreak: false // 不允许不安全的换行中断
+    }
+  },
+  loopfunc: {
+    errors: {
+      loopfunc: false, // 不允许循环中定义函数
+    },
+    fixed: {
+      loopfunc: true,// 允许循环中定义函数, 但是一般会带来一些问题, 不过可以使用闭包来避免错误
+    }
+  },
+  maxerr: {
+    errors: {
+      unused: true,
+      undef: true,
+      maxerr: 3 // 设置Jshint中断扫描前允许的最大错误数为3, 默认值是50
+    },
+    fixed: {
+      unused: true,
+      undef: true,
+      maxerr: 5 // 设置Jshint中断扫描前允许的最大错误数为4, 默认值是50
+    }
+  },
+  multistr: {
+    errors: {
+      multistr: false // 不允许多行字符串
+    },
+    fixed: {
+      multistr: true // 允许多行字符串, / 后面的空格仍会引起警告 !
+    }
+  },
 
   notypeof: true, // 允许无效的typeof操作值
 
