@@ -278,26 +278,110 @@ module.exports = {
       multistr: true // 允许多行字符串, / 后面的空格仍会引起警告 !
     }
   },
+  notypeof: {
+    both: {
+      notypeof: false // 允许无效的typeof操作值
+    }
+  },
+  proto: {
+    errors: {
+      proto: false, // 不允许使用__proto__
+    },
+    fixed: {
+      proto: true, // 允许使用__proto__
+    }
+  },
+  scripturl: {
+    errors: {
+      scripturl: false // 不允许出现javascript: <URL>这样的脚本定向语句
+    },
+    fixed: {
+      scripturl: true // 允许出现javascript: <URL>这样的脚本定向语句
+    }
+  },
+  shadow_inner: {
+    errors: {
+      shadow: 'inner'  // 仅仅在作用域链内部检查变量声明
+    },
+    fixed: {
+      shadow: 'inner'
+    }
+  },
+  shadow_outer: {
+    errors: {
+      shadow: 'outer' // 不仅在作用域链内部，而且还在作用域链外部检查变量声明
+    },
+    fixed: {
+      shadow: 'outer'
+    }
+  },
+  shadow_true: {
+    errors: {
+      shadow: false // 与shadow: 'inner'相同
+    },
+    fixed: {
+      shadow: true // 允许不在作用域链内部声明变量
+    }
+  },
+  sub: {
+    errors: {
+      sub: false // 不允许使用[]配合表达式来访问属性
+    },
+    fixed: {
+      sub: true // 允许使用[]配合表达式来访问属性
+    }
+  },
+  supernew: {
+    errors: {
+      supernew: false
+    },
+    fixed: {
+      supernew: true
+    }
+  },
+  validthis: {
+    errors: {
+      validthis: false // 严格模式下, 不允许在非构造函数中使用this
+    },
+    fixed: {
+      validthis: true // 严格模式下, 允许在非构造函数中使用this
+    }
+  },
+  noyield: {
+    both: {
+      esnext: true,
+      noyield: false // 不允许发生器中没有yield语句
+    }
+  },
+  browser: {
+    errors: {
+      undef: true, // 不允许出现未定义的情况
+      browser: false, // 不允许出现现代浏览器中的全部变量
+      devel: false // 不允许出现console, alert等
+    },
+    fixed: {
+      undef: true, // 不允许出现未定义的情况
+      browser: true, // 允许出现现代浏览器中的全部变量
+      devel: true // 允许出现console, alert等
+    }
+  },
+  devel: {
+    errors: {
+      undef: true, // 不允许出现未定义的情况
+      devel: false // 不允许出现console, alert等
+    },
+    fixed: {
+      undef: true, // 不允许出现未定义的情况
+      devel: true // 允许出现console, alert等
+    }
+  },
 
-  notypeof: true, // 允许无效的typeof操作值
-
-  proto: true, // 允许使用__proto__
-
-  scripturl: false, // ？suppresses warnings about the use of script-targeted URLs, such as javascript:....？
-
-  shadow: true, // declaring a variable that had been already declared somewhere in the outer scope is ok
-
-  sub: true, // using [] notation when it can be expressed in dot notation is accepted
-
-  supernew: true,  // 允许 new function() {...} 和 new Object;
-
-  validthis: true, // 允许严格模式下, 在非构造函数中使用this
-
-  noyield: false, // 不允许发生器中没有yield语句
-
-  browser: true,  //  defines globals exposed by modern browsers: all the way from good old document and navigator to the HTML5 FileReader, and other new developments in the browser world. Note: This option doesn't expose variables like alert or console
-
-  devel: true,  // defines globals that are usually used for logging poor-man's debugging: console, alert, etc.
+  enforceall: {},
+  futurehostile: {},
+  nocomma: {},
+  predef: {},
+  singleGroups: {},
+  varstmt: {},
 
   jquery: true, // defines globals exposed by the jQuery JavaScript library
 
