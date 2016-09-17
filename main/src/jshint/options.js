@@ -446,16 +446,84 @@ module.exports = {
       withstmt: false,
     }
   },
+  elision: {
+    errors: {
+      elision: false // 不允许使用ES6数组省略式
+    },
+    fixed: {
+      elision: true // 允许使用ES6数组省略式
+    }
+  },
+  browserify: {
+    errors: {
+      undef: true, // 不允许出现未定义的情况
+      browserify: false, // 不允许出现browserify的变量
+      devel: false // 不允许出现console, alert等
+    },
+    fixed: {
+      undef: true, // 不允许出现未定义的情况
+      browserify: true, // 允许出现browserify的变量
+      devel: true // 允许出现console, alert等
+    }
+  },
+  mocha: {
+    errors: {
+      undef: true, // 不允许出现未定义的情况
+      node: true, // 允许出现require
+      mocha: false, // 不允许出现mocha的变量
+      devel: false // 不允许出现console, alert等
+    },
+    fixed: {
+      undef: true, // 不允许出现未定义的情况
+      node: true, // 允许出现require
+      mocha: true, // 允许出现mocha的变量
+      devel: true // 允许出现console, alert等
+    }
+  },
+  module: {
+    errors: {
+      undef: true, // 不允许出现未定义的情况
+      node: true, // 允许出现require
+      esnext: true,
+      module: false, // 不允许使用 ECMAScript 6 module
+      devel: false // 不允许出现console, alert等
+    },
+    fixed: {
+      undef: true, // 不允许出现未定义的情况
+      node: true, // 允许出现require
+      esnext: true,
+      module: true, // 允许使用 ECMAScript 6 module
+      devel: true // 允许出现console, alert等
+    }
+  },
+  qunit: {
+    errors: {
+      undef: true, // 不允许出现未定义的情况
+      qunit: false, // 不允许使用Quint的变量
+      devel: false // 不允许出现console, alert等
+    },
+    fixed: {
+      undef: true, // 不允许出现未定义的情况
+      qunit: true, // 允许使用Quint的变量
+      devel: true // 允许出现console, alert等
+    }
+  },
 
+  // unknown
   enforceall: {},
   futurehostile: {},
 
-  elision: {},
-  browserify: {},
-  mocha: {},
-  module: {},
-  qunit: {}
-
   // other Environments options let JSHint know about some pre-defined global variables:
-  // couch / dojo / jasmine / mootools / phantom / prototypejs / rhino / shelljs / typed / worker / wsh / yui
+  couch: {},
+  dojo: {},
+  jasmine: {},
+  mootools: {},
+  phantom: {},
+  prototypejs: {},
+  rhino: {},
+  shelljs: {},
+  typed: {},
+  worker: {},
+  wsh: {},
+  yui: {}
 }
