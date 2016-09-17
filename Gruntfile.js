@@ -1,3 +1,7 @@
+var fs = require('fs')
+var path = require('path')
+var stream = require('stream')
+
 var concatConfig = require('./configs/concat/exports')
 var uglifyConfig = require('./configs/uglify/exports')
 var jshintConfig = require('./configs/jshint/exports')
@@ -65,6 +69,37 @@ module.exports = function (grunt) {
     grunt.registerTask(taskName, [
       'jshint:' + key
     ])
+  })
+
+
+  grunt.registerTask('all', 'Run all grunt-jshint-tasks and log to file', function () {
+    var newStdout = new stream.PassThrough()
+
+    process.__defineGetter__('stdout', function () {
+      return newStdout
+    })
+
+    var stdoutFile = fs.createWriteStream(path.join(__dirname, 'configs/jshint/log/stdout.log'))
+
+    newStdout.pipe(stdoutFile)
+
+    var directory = path.join(__dirname, 'main/src/jshint/errors')
+
+    var infos = fs.readdirSync(directory).sort().map(function (file) {
+      return {
+        taskname: file,
+        index: file.split('\.')[0]
+      }
+    })
+
+    infos = infos.slice(0, 2)
+
+    infos.forEach(function (info) {
+      var index = info.index
+
+      grunt.task.run(index + 'e')
+      grunt.task.run(index + 'f')
+    })
   })
 
   // user-defined-tasks
