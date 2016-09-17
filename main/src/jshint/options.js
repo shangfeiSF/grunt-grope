@@ -333,10 +333,10 @@ module.exports = {
   },
   supernew: {
     errors: {
-      supernew: false
+      supernew: false // 不允许使用怪异的new
     },
     fixed: {
-      supernew: true
+      supernew: true // 允许使用怪异的new
     }
   },
   validthis: {
@@ -411,14 +411,51 @@ module.exports = {
       devel: true // 允许出现console, alert等
     }
   },
+  nocomma: {
+    errors: {
+      nocomma: true // 不允许使用逗号
+    },
+    fixed: {
+      nocomma: false // 允许使用逗号
+    }
+  },
+  predef: {
+    errors: {
+      undef: true, // 不允许出现未定义的情况
+      predef: [] // 预定义的变量为空
+    },
+
+    fixed: {
+      undef: true, // 不允许出现未定义的情况
+      predef: ["describe", "before", "after"] // 预定义若干变量
+    }
+  },
+  singleGroups: {
+    both: {
+      singleGroups: true // 检查不必要的括号
+    }
+  },
+  varstmt: {
+    both: {
+      esnext: true,
+      varstmt: true // 不允许使用var来声明变量
+    }
+  },
+  withstmt: {
+    both: {
+      withstmt: false,
+    }
+  },
 
   enforceall: {},
   futurehostile: {},
-  nocomma: {},
-  predef: {},
-  singleGroups: {},
-  varstmt: {},
 
-  // other Environments options let JSHint know about some pre-defined global variables.
-  // couch / dojo / mootools / phantom / prototypejs / rhino / worker / wsh / yui
+  elision: {},
+  browserify: {},
+  mocha: {},
+  module: {},
+  qunit: {}
+
+  // other Environments options let JSHint know about some pre-defined global variables:
+  // couch / dojo / jasmine / mootools / phantom / prototypejs / rhino / shelljs / typed / worker / wsh / yui
 }
