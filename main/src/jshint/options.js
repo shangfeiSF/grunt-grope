@@ -375,6 +375,42 @@ module.exports = {
       devel: true // 允许出现console, alert等
     }
   },
+  jquery: {
+    errors: {
+      undef: true, // 不允许出现未定义的情况
+      jquery: false, // 不允许jQuery中的变量
+      devel: false // 不允许出现console, alert等
+    },
+    fixed: {
+      undef: true, // 不允许出现未定义的情况
+      jquery: true, // 允许jQuery中的变量
+      devel: true // 允许出现console, alert等
+    }
+  },
+  node: {
+    errors: {
+      undef: true, // 不允许出现未定义的情况
+      node: false, // 不允许出现nodejs的变量
+      devel: false // 不允许出现console, alert等
+    },
+    fixed: {
+      undef: true, // 不允许出现未定义的情况
+      node: true, // 允许出现nodejs的变量
+      devel: true // 允许出现console, alert等
+    }
+  },
+  nonstandard: {
+    errors: {
+      undef: true, // 不允许出现未定义的情况
+      nonstandard: false, // 不允许出现非标准的变量(escape, unescape)
+      devel: false // 不允许出现console, alert等
+    },
+    fixed: {
+      undef: true, // 不允许出现未定义的情况
+      nonstandard: true, // 允许出现非标准的变量(escape, unescape)
+      devel: true // 允许出现console, alert等
+    }
+  },
 
   enforceall: {},
   futurehostile: {},
@@ -382,12 +418,6 @@ module.exports = {
   predef: {},
   singleGroups: {},
   varstmt: {},
-
-  jquery: true, // defines globals exposed by the jQuery JavaScript library
-
-  node: true, //  defines globals available program is running inside of the Node runtime environment
-
-  nonstandard: true //  defines non-standard but widely adopted globals such as escape and unescape
 
   // other Environments options let JSHint know about some pre-defined global variables.
   // couch / dojo / mootools / phantom / prototypejs / rhino / worker / wsh / yui
