@@ -65,9 +65,7 @@ if (nopt_options.log) {
     encoding: 'utf-8',
     flag: 'w'
   })
-  console.log('------------------------------------------------------------------------'.white)
   console.log('Saved jshint tasks config!'.magenta)
-  console.log('------------------------------------------------------------------------'.white)
 }
 
 module.exports = jshintConfig
