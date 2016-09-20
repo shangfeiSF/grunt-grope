@@ -45,7 +45,7 @@ var options = nopt(knowns, shorts, process.argv, 2)
 var tasksInfo = {}
 
 var main = function (indexs) {
-  console.log('Begin....'.magenta)
+  console.log('Begin....\n'.magenta)
 
   var enforcingFiles = fs.readdirAsync(enforcingDir)
   var relaxingFiles = fs.readdirAsync(relaxingDir)
@@ -128,26 +128,22 @@ var main = function (indexs) {
     })
 
     .then(function () {
-      var sep = '---------------------------------------------------------------------------------------\n'
       var log = ''
 
       Object.keys(tasksInfo).forEach(function (taskname) {
+        log += ['##', taskname, '\n\n'].join('').toString()
+
         var info = tasksInfo[taskname]
 
         Object.keys(info).forEach(function (key) {
           if (info[key].length) {
-            var msg = ['[', taskname, '] -- ', key, ':\n'].join('')
-
-            log += sep
-            log += msg.toString()
-            log += info[key].toString()
+            log += ['###', key, '：\n\n'].join('')
+            log += info[key].toString().replace(/\>/g, '')
           }
         })
       })
 
-      log += sep
-
-      return fs.writeFileAsync(path.join(process.cwd(), 'configs/jshint/log', +new Date() + '.log'), log, {
+      return fs.writeFileAsync(path.join(process.cwd(), 'configs/jshint/log', +new Date() + '.md'), log, {
         encoding: 'utf-8',
         flag: 'w'
       })
