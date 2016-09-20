@@ -508,10 +508,16 @@ module.exports = {
       devel: true // 允许出现console, alert等
     }
   },
-
-  // unknown
-  enforceall: {},
-  futurehostile: {},
+  futurehostile: {
+    both: {
+      futurehostile: true // 允许警告ECMAScript未来版本中的保留字
+    }
+  },
+  enforceall: {
+    // deprecated
+    // 启用所有的强制检查选项(enforcing-options)[http://jshint.com/docs/options/#enforcing-options]
+    // 禁用所有的宽松检查选项(relaxing-options)[http://jshint.com/docs/options/#relaxing-options]
+  },
 
   // other Environments options let JSHint know about some pre-defined global variables:
   couch: {},
