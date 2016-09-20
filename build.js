@@ -16,24 +16,30 @@ var execAsync = Promise.promisify(cp.exec, {
 var mainDir = path.join(process.cwd(), 'main')
 var errorsDir = path.join(mainDir, 'src/jshint/errors')
 
+var enforcingDir = path.join(errorsDir, '01.Enforcing')
+var relaxingDir = path.join(errorsDir, '02.Relaxing')
+var environmentsDir = path.join(errorsDir, '03.Environments')
+
 var knowns = {
   'input': Array,
   'all': Boolean,
 }
-var shorts = (function () {
+var shorts = (function (dirs) {
   var shorts = {
     'a': ['--all', 'true'],
     'i': ['--input']
   }
 
-  fs.readdirSync(errorsDir).sort().forEach(function (dir) {
-    var index = dir.split('\.').shift()
-    var cmd = 'i' + index
-    shorts[cmd] = ['--input', index]
+  dirs.forEach(function (dir) {
+    fs.readdirSync(dir).sort().forEach(function (file) {
+      var index = file.split('\.').shift()
+      var cmd = 'i' + index
+      shorts[cmd] = ['--input', index]
+    })
   })
 
   return shorts
-})()
+})([enforcingDir, relaxingDir, environmentsDir])
 var options = nopt(knowns, shorts, process.argv, 2)
 
 var tasksInfo = {}
@@ -41,25 +47,53 @@ var tasksInfo = {}
 var main = function (indexs) {
   console.log('Begin....'.magenta)
 
-  fs.readdirAsync(errorsDir)
-    .filter(function (dir) {
-      return fs.statAsync(path.join(errorsDir, dir))
+  var enforcingFiles = fs.readdirAsync(enforcingDir)
+  var relaxingFiles = fs.readdirAsync(relaxingDir)
+  var environmentsFiles = fs.readdirAsync(environmentsDir)
+
+  Promise.join(enforcingFiles, relaxingFiles, environmentsFiles, function (enforcingFiles, relaxingFiles, environmentsFiles) {
+      var enforcingFiles = enforcingFiles.map(function (file) {
+        return {
+          category: '01.Enforcing',
+          name: file
+        }
+      })
+
+      var relaxingFiles = relaxingFiles.map(function (file) {
+        return {
+          category: '02.Relaxing',
+          name: file
+        }
+      })
+
+      var environmentsFiles = environmentsFiles.map(function (file) {
+        return {
+          category: '03.Environments',
+          name: file
+        }
+      })
+
+      return enforcingFiles.concat(relaxingFiles).concat(environmentsFiles)
+    })
+
+    .filter(function (file) {
+      return fs.statAsync(path.join(errorsDir, file.category, file.name))
         .then(function (stat) {
           var all = true
           if (indexs) {
             all = indexs.some(function (index) {
-              return index == dir.split('\.')[0]
+              return index == file.name.split('\.')[0]
             })
           }
           return !stat.isDirectory() && all
         })
     })
 
-    .then(function (dirs) {
-      return dirs.map(function (dir) {
+    .then(function (files) {
+      return files.map(function (file) {
         return {
-          taskname: dir,
-          index: dir.split('\.')[0]
+          taskname: file.name,
+          index: file.name.split('\.')[0]
         }
       })
     })

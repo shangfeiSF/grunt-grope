@@ -15,32 +15,47 @@ var mainDir = path.join(__dirname, '../../main')
 
 var errorsDir = path.join(mainDir, 'src/jshint/errors')
 var fixedDir = path.join(mainDir, 'src/jshint/fixed')
-var options = require(path.join(mainDir, 'src/jshint/options.js'))
 
-function makeTasks(options, configs) {
+var logger = {}
+
+function makeTasks(configs) {
   var tasks = {}
 
   configs.forEach(function (config) {
     var dir = config.dir
     var type = config.type
 
-    var files = fs.readdirSync(dir).sort()
+    logger[type] = {}
 
-    files.forEach(function (file) {
-      var params = file.split('\.')
-      var index = params[0]
-      var optionName = params[1]
+    fs.readdirSync(dir).forEach(function (categoryDir) {
+      logger[type][categoryDir] = {}
 
-      tasks[optionName + '_' + type] = {
-        index: index,
-        type: type,
-        options: options[optionName].both ?
-          options[optionName].both :
-          options[optionName][type],
-        files: {
-          src: ['main/src/jshint', type, file].join('/')
+      var options = require(path.join(mainDir, 'src/jshint/options', categoryDir, 'combine.js'))
+
+      fs.readdirSync(path.join(dir, categoryDir)).forEach(function (file) {
+        var params = file.split('\.')
+
+        var index = params[0]
+        var optionName = params[1]
+
+        tasks[optionName + '--' + type] = {
+          index: index,
+          type: type,
+          options: options[optionName].both ?
+            options[optionName].both :
+            options[optionName][type],
+          files: {
+            src: ['main/src/jshint', type, categoryDir, file].join('/')
+          }
         }
-      }
+
+        logger[type][categoryDir][optionName] = {
+          index: index,
+          options: options[optionName].both ?
+            options[optionName].both :
+            options[optionName][type],
+        }
+      })
     })
   })
 
@@ -49,7 +64,7 @@ function makeTasks(options, configs) {
 
 var jshintConfig = {}
 
-jshintConfig.tasks = makeTasks(options, [
+jshintConfig.tasks = makeTasks([
   {
     dir: errorsDir,
     type: 'errors'
@@ -61,11 +76,11 @@ jshintConfig.tasks = makeTasks(options, [
 ])
 
 if (nopt_options.log) {
-  fs.writeFileSync(path.join(__dirname, 'log/tasks.json'), JSON.stringify(jshintConfig, null, 2), {
+  fs.writeFileSync(path.join(__dirname, 'log/tasks.json'), JSON.stringify(logger, null, 2), {
     encoding: 'utf-8',
     flag: 'w'
   })
-  console.log('Saved jshint tasks config!'.magenta)
+  console.log('Saved jshint tasks config!\n'.magenta)
 }
 
 module.exports = jshintConfig
