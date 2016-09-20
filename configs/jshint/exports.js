@@ -25,10 +25,10 @@ function makeTasks(configs) {
     var dir = config.dir
     var type = config.type
 
-    logger[type] = {}
-
     fs.readdirSync(dir).forEach(function (categoryDir) {
-      logger[type][categoryDir] = {}
+      if (!logger[categoryDir]) {
+        logger[categoryDir] = {}
+      }
 
       var options = require(path.join(mainDir, 'src/jshint/options', categoryDir, 'combine.js'))
 
@@ -49,12 +49,15 @@ function makeTasks(configs) {
           }
         }
 
-        logger[type][categoryDir][optionName] = {
-          index: index,
-          options: options[optionName].both ?
-            options[optionName].both :
-            options[optionName][type],
+        if (!logger[categoryDir][optionName]) {
+          logger[categoryDir][optionName] = {
+            index: index
+          }
         }
+
+        logger[categoryDir][optionName][type] = options[optionName].both ?
+          options[optionName].both :
+          options[optionName][type]
       })
     })
   })
