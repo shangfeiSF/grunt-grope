@@ -29,7 +29,12 @@ module.exports = {
     }
   },
   esnext: {
-    both: {}
+    errors: {
+      // 按照ES-5的标准检查代码, 默认es5: true
+    },
+    fixed: {
+      esnext: true // 按照ES-6的标准检查代码
+    }
   },
   evil: {
     errors: {

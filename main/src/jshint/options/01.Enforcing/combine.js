@@ -25,7 +25,8 @@ module.exports = {
   },
   enforceall: {
     both: {}
-    // deprecated
+    // http://jshint.com/docs/options/#enforceall
+    // This option has been deprecated and will be removed in the next major release of JSHint.
     // 启用所有的强制检查选项(enforcing-options)[http://jshint.com/docs/options/#enforcing-options]
     // 禁用所有的宽松检查选项(relaxing-options)[http://jshint.com/docs/options/#relaxing-options]
   },
@@ -35,19 +36,21 @@ module.exports = {
     }
   },
   es3: {
-    both: {}
+    both: {
+      es3: true // 按照ES-3的标准检查代码, 默认es5: true
+    }
   },
   es5: {
-    both: {}
+    both: {
+      // 按照ES-5的标准检查代码, 默认es5: true
+    }
   },
   esversion: {
     errors: {
-      // esversion: 5, // 按照指定的ES标准检查代码(3, 5, 6)
-      es5: true // Use esversion: 5 instead.
+      esversion: 5 // 按照指定的ES标准检查代码(3, 5, 6)
     },
     fixed: {
-      //esversion: 6, // 按照指定的ES标准检查代码(3, 5, 6)
-      esnext: true // Use esversion: 6 instead.
+      esversion: 6, // 按照指定的ES标准检查代码(3, 5, 6)
     }
   },
   forin: {

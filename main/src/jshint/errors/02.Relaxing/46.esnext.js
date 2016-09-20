@@ -1,16 +1,9 @@
 /*
- * esversion
- * http://jshint.com/docs/options/#esversion
+ * esnext
+ * http://jshint.com/docs/options/#esnext
  * This option is used to specify the ECMAScript version to which the code must adhere. It can assume one of the following values: 3, 5, 6
  * */
-/*
- * es3/es5/esnext
- * http://jshint.com/docs/options/#es3
- * http://jshint.com/docs/options/#es5
- * http://jshint.com/docs/options/#esnext
- * These options is the older options of esversion: 3/5/6, but no supported by grunt-contrib-jshint
- * */
-function esversion() {
+function esnext() {
   const obj = {
     meeting: 'hello world'
   };
@@ -23,4 +16,4 @@ function esversion() {
   ));
 }
 
-esversion();
+esnext();
